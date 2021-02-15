@@ -4,32 +4,63 @@ let budgetController = (function () {
 
   //We need data models for expanses and income
 
-  let Expense = function (id, description, value){
+  let Expense = function (id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-  let Income = function (id, description, value){
+  let Income = function (id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-
+//Store all data in this object
   let data = {
-    allItems:{
-      exp:[],
-      inc:[]
+    allItems: {
+      exp: [],
+      inc: []
     },
-    totals:{
-      exp:0,
-      inc:0,
+    totals: {
+      exp: 0,
+      inc: 0,
     },
+  };
+
+  return {
+
+    addItem: function (type, des, val) {
+      let newItem, ID;
+
+      //Create new ID
+      if (data.allItems[type].length > 0) {
+        ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+      } else {
+        ID = 0;
+      }
+
+      //Create new item based on exp or inc
+      if (type === 'exp') {
+        newItem = new Expense(ID, des, val);
+      } else if (type === 'inc') {
+        newItem = new Income(ID, des, val);
+      }
+
+      //Push it to data structure
+      data.allItems[type].push(newItem)
+
+      //Return the new element
+      return newItem;
+
+    },
+
+    testing: function () {
+      console.log(data)
+    }
   };
 
 })();
-
 
 /*Separation of concerns*/
 //UI CONTROLLER
@@ -72,15 +103,17 @@ let controller = (function (budgetCtrl, UICtrl) {
 
   }
 
-
-
   let ctrlAddItem = function () {
+
+    let input, newItem;
 
     //1. Get the field input data
 
-    let input = UICtrl.getinput();
+    input = UICtrl.getinput();
 
     //2. Add the item to the budget controller
+
+    newItem = budgetCtrl.addItem(input.type, input.description, input.value)
 
     //3. add the item to UI
 
@@ -90,14 +123,13 @@ let controller = (function (budgetCtrl, UICtrl) {
 
   };
 
-  return{
-    init: function (){
+  return {
+    init: function () {
       console.log('Application has started.');
       setupEventListeners();
     }
   }
 
 })(budgetController, UIController);
-
 
 controller.init();
