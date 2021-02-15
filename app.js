@@ -10,16 +10,50 @@ let budgetController = (function () {
 //UI CONTROLLER
 let UIController = (function () {
 
-  //Some code
+  let DOMStrings = {
+    inputType: '#addType',
+    inputDescription: '#addDescription',
+    inputValue: '#addValue',
+    addBtn: '#addButton',
+  };
+
+  return {
+    getinput: function () {
+      return {
+        type: document.querySelector(DOMStrings.inputType).value, // Will be either inc or exp
+        description: document.querySelector(DOMStrings.inputDescription).value,
+        value: document.querySelector(DOMStrings.inputValue).value
+      };
+    },
+    getDOMStrings: function () {
+      return DOMStrings;
+    },
+  };
 
 })();
 
 //GLOBAL APP CONTROLLER
 let controller = (function (budgetCtrl, UICtrl) {
 
+  let setupEventListeners = function () {
+    let DOM = UICtrl.getDOMStrings();
+
+    document.querySelector(DOM.addBtn).addEventListener('click', ctrlAddItem);
+    document.addEventListener('keypress', function (event) {
+      if (event === 13 || event.which === 13) {
+        ctrlAddItem();
+      }
+    });
+
+  }
+
+
+
   let ctrlAddItem = function () {
 
     //1. Get the field input data
+
+    let input = UICtrl.getinput();
 
     //2. Add the item to the budget controller
 
@@ -29,15 +63,16 @@ let controller = (function (budgetCtrl, UICtrl) {
 
     //5. Display the budget
 
-    console.log('It Works')
   };
 
-  document.querySelector('#addButton').addEventListener('click', ctrlAddItem);
-
-  document.addEventListener('keypress', function (event) {
-
-    if (event === 13 || event.which === 13) {
-      ctrlAddItem();
+  return{
+    init: function (){
+      console.log('Application has started.');
+      setupEventListeners();
     }
-  });
+  }
+
 })(budgetController, UIController);
+
+
+controller.init();
