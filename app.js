@@ -76,6 +76,7 @@ let UIController = (function () {
   };
 
   return {
+
     getinput: function () {
       return {
         type: document.querySelector(DOMStrings.inputType).value, // Will be either inc or exp
@@ -96,7 +97,7 @@ let UIController = (function () {
       } else if (type === 'exp') {
 
         element = DOMStrings.expensesContainer;
-        html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value"> %value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><iclass="ion-ios-close-outline"></i></button></div></div></div>';
+        html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value"> %value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 
       }
 
@@ -109,6 +110,21 @@ let UIController = (function () {
 
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
 
+    },
+
+    clearFields: function () {
+      let fields, fieldsArr;
+
+      fields = document.querySelectorAll(
+          DOMStrings.inputDescription + ',' + DOMStrings.inputValue);
+
+      fieldsArr = Array.prototype.slice.call(fields);
+
+      fieldsArr.forEach(function (current, index, array) {
+
+        current.value = "";
+
+      });
     },
 
     getDOMStrings: function () {
@@ -149,9 +165,13 @@ let controller = (function (budgetCtrl, UICtrl) {
 
     UICtrl.addListItem(newItem, input.type);
 
-    //4. Calculate the budget
+    //.4 clear the fields
 
-    //5. Display the budget
+    UICtrl.clearFields();
+
+    //5. Calculate the budget
+
+    //6. Display the budget
 
   };
 
