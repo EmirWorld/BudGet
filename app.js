@@ -116,7 +116,8 @@ let UIController = (function () {
     budgetValue: "#budgetValue",
     incomeLabel: '#budgetIncomeValue',
     expansesLabel: '#budgetExpensesValue',
-    percentageLabel: '#budgetExpensesPercentage'
+    percentageLabel: '#budgetExpensesPercentage',
+    budgetContainer: '#budgetContainer',
 
   };
 
@@ -137,12 +138,12 @@ let UIController = (function () {
       if (type === 'inc') {
 
         element = DOMStrings.incomeContainer;
-        html = '<div class="item clearfix" id="income-%id$"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value"> %value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+        html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value"> %value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 
       } else if (type === 'exp') {
 
         element = DOMStrings.expensesContainer;
-        html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value"> %value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+        html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value"> %value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 
       }
 
@@ -180,10 +181,10 @@ let UIController = (function () {
       document.querySelector(
           DOMStrings.expansesLabel).textContent = obj.totalExp;
 
-      if (obj.totalInc > obj.totalExp){
+      if (obj.totalInc > obj.totalExp) {
         document.querySelector(
             DOMStrings.percentageLabel).textContent = obj.percentage + '%';
-      }else {
+      } else {
         document.querySelector(
             DOMStrings.percentageLabel).textContent = '';
       }
@@ -208,6 +209,9 @@ let controller = (function (budgetCtrl, UICtrl) {
         ctrlAddItem();
       }
     });
+
+    document.querySelector(DOM.budgetContainer).addEventListener('click',
+        ctrlDeleteItem);
 
   }
 
@@ -256,14 +260,37 @@ let controller = (function (budgetCtrl, UICtrl) {
 
   };
 
+  let ctrlDeleteItem = function (event) {
+    let itemID, splitID,type,id;
+
+    itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+    if (itemID) {
+      //inc-1 format of id, we need way to split this up
+
+      splitID = itemID.split('-');
+      type = splitID[0];
+      id = splitID[1];
+
+
+      //1. delete item from data structure
+
+      //2. delete item from the UI
+
+      //3. Update and show the new budget totals
+
+
+    }
+
+  };
   return {
     init: function () {
       console.log('Application has started.');
       UICtrl.displayBudget({
-        budget:0,
+        budget: 0,
         totalInc: 0,
         totalExp: 0,
-        percentage:-1,
+        percentage: -1,
       });
       setupEventListeners();
     }
